@@ -1,81 +1,56 @@
-
-// Variablar för att använda express, bcrypt och cors
-
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const db = require('./database');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const db = require('./database'); // Importera din databasanslutning
+
 const app = express();
+const PORT = process.env.PORT || 3001;
+const SECRET_KEY = 'verysecretkey';
 
+app.use(cors());
+app.use(bodyParser.json());
 
-app.use(express.json());
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  console.log(`Attempting to register user: ${username}`);
+  db.query('SELECT username FROM users WHERE username = ?', [username], async (err, result) => {
+    if (err) {
+      console.error('Error during user search:', err);
+      return res.status(500).send('Databasfel');
+    }
+    if (result.length) {
+      console.log('User already exists:', username);
+      return res.status(409).send('Användaren finns redan.');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword], (err, result) => {
+      if (err) {
+        console.error('Error during user creation:', err);
+        return res.status(500).send('Kunde inte skapa användare.');
+      }
+      console.log('User created successfully:', username);
+      res.status(201).send('Användare skapad!');
+    });
+  });
+});
 
-app.use(cors({
-    origin: 'http://localhost:3000', 
-    credentials: true, 
-    methods: ['GET', 'POST'], 
-}));
-
-// Logga in användare
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  try {
-    const user = await db.query('SELECT id FROM users WHERE username = ?', [username]);
-    if (user.length && await bcrypt.compare(password, user[0].password)) {
-      const newApiKey = crypto.randomBytes(20).toString('hex');
-      await db.query('INSERT INTO api_keys (user_id, api_key) VALUES (?, ?)', [user[0].id, newApiKey]);
-      res.json({ apikey: newApiKey });
-    } else {
-      res.status(401).json({ message: 'Authentication failed' });
+  db.query('SELECT * FROM users WHERE username = ?', [username], async (err, result) => {
+    if (err) {
+      return res.status(500).send('Databasfel');
     }
-  } catch (error) {
-    console.error('Server error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// Registrera användare
-
-  app.post('/register', async (req, res) => {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    try {
-      await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
-      res.status(201).send('User created');
-    } catch (error) {
-      res.status(500).json({ message: 'Error creating user' });
+    if (!result.length || !(await bcrypt.compare(password, result[0].password))) {
+      return res.status(401).send('Fel användarnamn eller lösenord.');
     }
+    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '24h' });
+    res.json({ apikey: token });
   });
-
-app.listen(3001, () => {
-  console.log('Server running on port 3001');
 });
 
-// Validerar API-nyckel
-
-const validateApiKey = async (req, res, next) => {
-  const apiKey = req.headers['x-api-key'];
-  if (!apiKey) {
-    return res.status(401).json({ message: 'API key missing' });
-  }
-  try {
-    const key = await db.query('SELECT user_id FROM api_keys WHERE api_key = ?', [apiKey]);
-    if (key.length) {
-      req.user = key[0];
-      next();
-    } else {
-      res.status(401).json({ message: 'Invalid API key' });
-    }
-  }
-  catch (error) {
-    console.error('Server error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-}
-
-// Kör en skyddad rutt
-
-app.get('/protected-route', validateApiKey, (req, res) => {
-  res.json({ message: 'This is protected data.' });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
