@@ -14,4 +14,4 @@ db.connect(err => {
   console.log('Connected to the database successfully!');
 });
 
-module.exports = db;
+module.exports = db;      // Exporterar databasanslutningen för att användas i server.js

@@ -11,16 +11,23 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
-        console.log("User loaded from localStorage:", savedUser);  // Logga datan som laddas
+        console.log("User loaded from localStorage:", savedUser);
         if (savedUser) {
-            setUser(JSON.parse(savedUser));
+            try {
+                const userData = JSON.parse(savedUser);
+                setUser(userData);
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+                
+                localStorage.removeItem('user'); // Rensa korrupt data om det misslyckas att parsa
+            }
         }
     }, []);
 
-    const login = (user) => {
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        console.log("User saved to localStorage:", JSON.stringify(user));  // Logga datan som sparas
+    const login = (apikey) => {
+        console.log("Received token for login:", apikey);  
+        localStorage.setItem('user', JSON.stringify({ token: apikey }));
+        setUser({ token: apikey });
     };
 
     const logout = () => {

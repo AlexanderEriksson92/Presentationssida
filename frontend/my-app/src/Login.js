@@ -1,11 +1,13 @@
 import React, { useState } from 'react';  
 import { Link } from 'react-router-dom';  
 import { useLogin } from './LoginCheck';  
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const { login } = useLogin();
     const [username, setUsername] = useState('');  
     const [password, setPassword] = useState(''); 
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -18,6 +20,7 @@ function Login() {
         if (response.ok) {
             login(data);
             alert('Inloggning lyckad!');
+            navigate('/');
         } else {
             alert('Fel användarnamn eller lösenord');
         }
