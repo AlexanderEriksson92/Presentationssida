@@ -23,30 +23,34 @@ function CreatePost() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Title:
-        <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
-      </label>
-      <label>
-        Content:
-        <textarea value={content} onChange={e => setContent(e.target.value)} />
-      </label>
-      <label>
-        Image URL:
-        <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
-      </label>
-      <label>
-        Page:
-        <select value={page} onChange={e => setPage(e.target.value)}>
-          <option value="">Select a Page</option>
-          <option value="Ma">Ma</option>
-          <option value="Ca">Ca</option>
-          <option value="Exempel">Exempel</option>
-        </select>
-      </label>
-      <button type="submit">Create Post</button>
-    </form>
+    <div className="container">
+      <h2>Create a New Post</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="title" className="form-label">Title:</label>
+          <input type="text" id="title" className="form-control" value={title} onChange={e => setTitle(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="content" className="form-label">Content:</label>
+          <textarea id="content" className="form-control" value={content} onChange={e => setContent(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="imageUrl" className="form-label">Image URL:</label>
+          <input type="text" id="imageUrl" className="form-control" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="page" className="form-label">Page:</label>
+          <select id="page" className="form-select" value={page} onChange={e => setPage(e.target.value)}>
+            <option value="">Select a Page</option>
+            <option value="Home">Home</option>
+            <option value="Ma">Ma</option>
+            <option value="Ca">Ca</option>
+            <option value="Exempel">Exempel</option>
+          </select>
+        </div>
+        <button type="submit" className="btn btn-primary">Create Post</button>
+      </form>
+    </div>
   );
 }
 

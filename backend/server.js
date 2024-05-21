@@ -92,3 +92,34 @@ app.post('/posts', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.delete('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM posts WHERE id = ?',  [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Failed to delete post' });
+  }
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: 'Inlägg ej hittat'});
+  }
+  res.status(200).json({ message: 'Inlägg raderat' });
+});
+});
+app.put('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  const { title, content, imageUrl, page } = req.body;
+
+  if (!title || !content || !page) {
+      return res.status(400).json({ message: 'Title, content, and page are required' });
+  }
+  const query = 'UPDATE posts SET title = ?, content = ?, image_url = ?, page = ? WHERE id = ?';
+  db.query(query, [title, content, imageUrl, page, id], (err, result) => {
+      if (err) {
+          return res.status(500).json({ message: 'Failed to update post' });
+      }
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ message: 'Post not found' });
+      }
+      res.status(200).json({ message: 'Post updated successfully' });
+  });
+});

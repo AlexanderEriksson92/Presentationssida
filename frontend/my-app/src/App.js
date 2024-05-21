@@ -15,8 +15,7 @@ import Add from './Add';
 import Exempel from './Exempel';
 import { useLogin, AuthProvider } from './LoginCheck';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
+import './App.css'; 
 function App() {
   return (
     <AuthProvider>
@@ -27,7 +26,7 @@ function App() {
               <NavigationLinks />
             </div>
           </nav>
-          <div className="container mt-3">
+          <div className="container container-custom mt-3">
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

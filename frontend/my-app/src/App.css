@@ -23,7 +23,23 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.container-custom {
+  max-width: 800px;
+  margin: 0 auto;
+}
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+.container-custom {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.section {
+  margin-bottom: 4em;
+}
+.lead {
+  text-align: left;
+}
 .App-link {
   color: #61dafb;
 }

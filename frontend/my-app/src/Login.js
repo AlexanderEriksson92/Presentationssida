@@ -27,22 +27,26 @@ function Login() {
     };
 
     return (
-        <div>
-            <h1>Logga in</h1>
-            <form onSubmit={handleLogin}>
-                <label>
-                    Användarnamn:
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                </label>
-                <label>
-                    Lösenord:
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </label>
-                <button type="submit">Logga in</button>
-            </form>
-            <p>Inte medlem? <Link to="/register">Registrera dig här</Link></p>
+        <div className="container d-flex justify-content-center vh-40">
+            <div className="card p-4" style={{ width: '400px' }}>
+                <h1 className="card-title text-center">Logga in</h1>
+                <form onSubmit={handleLogin}>
+                    <div className="form-group">
+                        <label htmlFor="username">Användarnamn:</label>
+                        <input type="text" className="form-control" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Lösenord:</label>
+                        <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <button type="submit" className="btn btn-primary btn-block mt-4">Logga in</button>
+                </form>
+                <p className="text-center mt-3">Inte medlem? <Link to="/register" className="link">Registrera dig här</Link></p>
+            </div>
         </div>
     );
+    
+    
 }
 
 export default Login;
