@@ -37,6 +37,7 @@ const DraggableCard = ({ id, content, index, moveCard }) => {
       <div className="card-body">
         <h5 className="card-title">{content.title}</h5>
         <p className="card-text">{content.content}</p>
+        {content.image_url && <img src={content.image_url} className="card-img-top" alt={content.title} />}
       </div>
     </div>
   );
@@ -99,6 +100,7 @@ function Exempel() {
             key={post.id}
             id={post.id}
             content={post}
+            image_url={post.image_url}
             index={index}
             moveCard={moveCard}
           />
