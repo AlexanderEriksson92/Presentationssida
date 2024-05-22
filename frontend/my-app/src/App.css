@@ -40,6 +40,9 @@ body {
 .lead {
   text-align: left;
 }
+.no-border {
+  border: none;
+}
 .App-link {
   color: #61dafb;
 }

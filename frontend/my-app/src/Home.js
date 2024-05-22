@@ -25,7 +25,7 @@ function Home() {
       <h2>Posts</h2>
       <div>
         {posts.map((post) => (
-          <div className="card mb-4 shadow-sm" key={post.id} style={{ maxWidth: '800px', margin: '4em auto' }}>
+          <div className="card mb-4 shadow-sm no-border" key={post.id} style={{ maxWidth: '800px', margin: '4em auto' }}>
             {post.image_url && <img src={post.image_url} className="card-img-top" alt={post.title} />}
             <div className="card-body">
               <h5 className="card-title">{post.title}</h5>

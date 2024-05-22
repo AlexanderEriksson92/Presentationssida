@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const SECRET_KEY = 'verysecretkey';
 
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -89,9 +90,7 @@ app.post('/posts', async (req, res) => {
     res.status(201).json({ message: 'Post created successfully', postId: result.insertId });
   });
 });
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
 
 app.delete('/posts/:id', (req, res) => {
   const { id } = req.params;
@@ -122,4 +121,28 @@ app.put('/posts/:id', (req, res) => {
       }
       res.status(200).json({ message: 'Post updated successfully' });
   });
+});
+
+app.post('/update-positions', (req, res) => {
+  const { positions } = req.body;
+
+  const updates = positions.map(({ id, position }) => {
+    return new Promise((resolve, reject) => {
+      db.query('UPDATE posts SET position = ? WHERE id = ?', [position, id], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  });
+
+  Promise.all(updates)
+    .then(() => res.status(200).json({ message: 'Position uppdaterad!' }))
+    .catch((err) => res.status(500).json({ message: 'Position inte uppdaterad.', error: err }));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

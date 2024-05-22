@@ -16,8 +16,11 @@ function CreatePost() {
       });
       if (!response.ok) throw new Error('Something went wrong');
       alert('Post created successfully!');
+      setTitle('');
+      setContent('');
+      setImageUrl('');
+      setPage('');
     } catch (error) {
-      console.error('Failed to create post:', error);
       alert('Failed to create post.');
     }
   };

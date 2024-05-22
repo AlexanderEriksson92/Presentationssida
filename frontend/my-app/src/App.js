@@ -13,9 +13,11 @@ import MA from './Ma';
 import CA from './Ca';
 import Add from './Add';
 import Exempel from './Exempel';
+import SimpleTest from './SimpleTest';  // Importera SimpleTest
 import { useLogin, AuthProvider } from './LoginCheck';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; 
+
 function App() {
   return (
     <AuthProvider>
@@ -33,7 +35,8 @@ function App() {
               <Route path="/exempel" element={<ProtectedRoute><Exempel /></ProtectedRoute>} />
               <Route path="/ca" element={<ProtectedRoute><CA /></ProtectedRoute>} />
               <Route path="/ma" element={<ProtectedRoute><MA /></ProtectedRoute>} />
-              <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />  
+              <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
+              <Route path="/simple-test" element={<ProtectedRoute><SimpleTest /></ProtectedRoute>} /> {/* Lägg till denna rad */}
               <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             </Routes>
           </div>
@@ -60,7 +63,8 @@ function NavigationLinks() {
             <li className="nav-item"><Link className="nav-link" to="/ma">MA</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/ca">CA</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/exempel">Exempel</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/add">Lägg till Inlägg</Link></li> 
+            <li className="nav-item"><Link className="nav-link" to="/add">Lägg till Inlägg</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/simple-test">Simple Test</Link></li> {/* Lägg till denna rad */}
           </>
         )}
       </ul>
