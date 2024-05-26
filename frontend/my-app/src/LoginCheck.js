@@ -8,6 +8,7 @@ export function useLogin() {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true); // Lägg till laddningsstatus
 
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
@@ -18,10 +19,10 @@ export const AuthProvider = ({ children }) => {
                 setUser(userData);
             } catch (e) {
                 console.error('Error parsing user data:', e);
-                
                 localStorage.removeItem('user'); // Rensa korrupt data om det misslyckas att parsa
             }
         }
+        setLoading(false); // Autentiseringskontrollen är klar
     }, []);
 
     const login = (apikey) => {
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <LoginContext.Provider value={{ user, login, logout }}>
+        <LoginContext.Provider value={{ user, login, logout, loading }}>
             {children}
         </LoginContext.Provider>
     );

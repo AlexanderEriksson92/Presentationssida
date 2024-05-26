@@ -1,7 +1,6 @@
 import React, { useState } from 'react';  
-import { Link } from 'react-router-dom';  
-import { useLogin } from './LoginCheck';  
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  
+import { useLogin } from './LoginCheck';
 
 function Login() {
     const { login } = useLogin();
@@ -18,7 +17,7 @@ function Login() {
         });
         const data = await response.json();
         if (response.ok) {
-            login(data);
+            login(data); // Spara token och logga in användaren
             alert('Inloggning lyckad!');
             navigate('/');
         } else {
@@ -45,8 +44,6 @@ function Login() {
             </div>
         </div>
     );
-    
-    
 }
 
 export default Login;

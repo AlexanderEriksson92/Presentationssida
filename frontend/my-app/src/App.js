@@ -13,10 +13,10 @@ import MA from './Ma';
 import CA from './Ca';
 import Add from './Add';
 import Exempel from './Exempel';
-import SimpleTest from './SimpleTest';  // Importera SimpleTest
+import EditPosts from './EditPosts';
 import { useLogin, AuthProvider } from './LoginCheck';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'; 
+import './App.css';
 
 function App() {
   return (
@@ -36,7 +36,7 @@ function App() {
               <Route path="/ca" element={<ProtectedRoute><CA /></ProtectedRoute>} />
               <Route path="/ma" element={<ProtectedRoute><MA /></ProtectedRoute>} />
               <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
-              <Route path="/simple-test" element={<ProtectedRoute><SimpleTest /></ProtectedRoute>} /> {/* Lägg till denna rad */}
+              <Route path="/edit-posts" element={<ProtectedRoute><EditPosts /></ProtectedRoute>} />
               <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             </Routes>
           </div>
@@ -64,7 +64,7 @@ function NavigationLinks() {
             <li className="nav-item"><Link className="nav-link" to="/ca">CA</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/exempel">Exempel</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/add">Lägg till Inlägg</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/simple-test">Simple Test</Link></li> {/* Lägg till denna rad */}
+            <li className="nav-item"><Link className="nav-link" to="/edit-posts">Edit Posts</Link></li> 
           </>
         )}
       </ul>
@@ -73,10 +73,17 @@ function NavigationLinks() {
 }
 
 function ProtectedRoute({ children }) {
-  const { user } = useLogin();
+  const { user, loading } = useLogin();
+
+  if (loading) {
+    // Visa en laddningsindikator eller inget medan autentiseringskontrollen pågår
+    return null;
+  }
+
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
   return children;
 }
 

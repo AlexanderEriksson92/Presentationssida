@@ -46,6 +46,25 @@ body {
 .App-link {
   color: #61dafb;
 }
+/* Hover effekt för kort */
+.card-hover-top {
+  border-top: 4px solid pink;
+}
+
+.card-hover-bottom {
+  border-bottom: 4px solid pink;
+}
+
+.card-snapping {
+  transition: transform 0.2s ease;
+}
+
+.card-dragging {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 1 !important;
+}
+
+
 
 @keyframes App-logo-spin {
   from {

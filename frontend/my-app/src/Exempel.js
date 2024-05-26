@@ -68,25 +68,23 @@ function Exempel() {
     const [movedPost] = updatedPosts.splice(fromIndex, 1);
     updatedPosts.splice(toIndex, 0, movedPost);
 
-    // Uppdaterar positioner i state
     const newPosts = updatedPosts.map((post, index) => ({
       ...post,
-      position: index
+      position: index,
     }));
 
     setPosts(newPosts);
 
-    // Skickar de nya positionerna till backend
     fetch('http://localhost:3001/update-positions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ positions: newPosts.map(({ id, position }) => ({ id, position })) })
+      body: JSON.stringify({ positions: newPosts.map(({ id, position }) => ({ id, position })) }),
     })
-      .then(response => response.json())
-      .then(data => console.log('Positions updated successfully:', data))
-      .catch(error => console.error('Failed to update positions:', error));
+      .then((response) => response.json())
+      .then((data) => console.log('Positions updated successfully:', data))
+      .catch((error) => console.error('Failed to update positions:', error));
   };
 
   return (
@@ -100,7 +98,6 @@ function Exempel() {
             key={post.id}
             id={post.id}
             content={post}
-            image_url={post.image_url}
             index={index}
             moveCard={moveCard}
           />
