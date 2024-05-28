@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'; // Importerar CSS-filen
 
 const ItemType = 'CARD';
 
@@ -27,17 +28,25 @@ const DraggableCard = ({ id, content, index, moveCard }) => {
   return (
     <div
       ref={(node) => drag(drop(node))}
-      className="card mb-4 shadow-sm"
+      className={`draggable-box mb-4 ${isDragging ? 'dragging' : ''}`}
       style={{
-        maxWidth: '800px',
-        margin: '4em auto',
-        opacity: isDragging ? 0.5 : 1,
+        backgroundColor: '#F1F2FA',
+        borderRadius: '5px',
+        padding: '60px',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
       }}
     >
       <div className="card-body">
-        <h5 className="card-title">{content.title}</h5>
-        <p className="card-text">{content.content}</p>
-        {content.image_url && <img src={content.image_url} className="card-img-top" alt={content.title} />}
+        {content.title && <h3 className="card-title" style={{ marginBottom: '20px' }}>{content.title}</h3>}
+        {content.text_content && <p className="card-text">{content.text_content}</p>}
+        {content.image_url && <img src={content.image_url} className="img-fluid mb-3" alt={content.title} />}
+        {content.list_content && (
+          <ul className="card-text">
+            {JSON.parse(content.list_content).map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
@@ -90,9 +99,8 @@ function Home() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container mt-5">
-        <h1>Welcome to the Home Page</h1>
-        <p>This is a simple example of a Home page.</p>
-        <h2>Posts</h2>
+        <h1>Välkommen till Startsidan</h1>
+        <p>Denna webbplats är skapad av Alexander Eriksson</p>
         {posts.map((post, index) => (
           <DraggableCard
             key={post.id}

@@ -11,9 +11,9 @@ import Register from './Register';
 import Home from './Home';
 import MA from './Ma';
 import CA from './Ca';
-import Add from './Add';
 import Exempel from './Exempel';
 import EditPosts from './EditPosts';
+import Presentationssida from './Presentationssida';
 import { useLogin, AuthProvider } from './LoginCheck';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -35,8 +35,8 @@ function App() {
               <Route path="/exempel" element={<ProtectedRoute><Exempel /></ProtectedRoute>} />
               <Route path="/ca" element={<ProtectedRoute><CA /></ProtectedRoute>} />
               <Route path="/ma" element={<ProtectedRoute><MA /></ProtectedRoute>} />
-              <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
               <Route path="/edit-posts" element={<ProtectedRoute><EditPosts /></ProtectedRoute>} />
+              <Route path="/presentationssida" element={<ProtectedRoute><Presentationssida /></ProtectedRoute>} />
               <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             </Routes>
           </div>
@@ -59,12 +59,13 @@ function NavigationLinks() {
         ) : (
           <>
             <li className="nav-item"><a className="nav-link" href="#" onClick={logout}>Logout</a></li>
-            <li className="nav-item"><Link className="nav-link" to="/">Startsida</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/">Startsida</Link></li>  
+            <li className="nav-item"><Link className="nav-link" to="/exempel">Elementor</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/ma">MA</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/ca">CA</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/exempel">Exempel</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/add">Lägg till Inlägg</Link></li>
+        
             <li className="nav-item"><Link className="nav-link" to="/edit-posts">Edit Posts</Link></li> 
+            <li className="nav-item"><Link className="nav-link" to="/presentationssida">Presentationssida</Link></li>
           </>
         )}
       </ul>
