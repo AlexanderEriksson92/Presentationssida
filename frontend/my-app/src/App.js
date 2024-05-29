@@ -63,7 +63,6 @@ function NavigationLinks() {
             <li className="nav-item"><Link className="nav-link" to="/exempel">Elementor</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/ma">MA</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/ca">CA</Link></li>
-        
             <li className="nav-item"><Link className="nav-link" to="/edit-posts">Edit Posts</Link></li> 
             <li className="nav-item"><Link className="nav-link" to="/presentationssida">Presentationssida</Link></li>
           </>
@@ -72,7 +71,7 @@ function NavigationLinks() {
     </div>
   );
 }
-
+// Om användaren inte är inloggad skickas den till inloggningssidan
 function ProtectedRoute({ children }) {
   const { user, loading } = useLogin();
 

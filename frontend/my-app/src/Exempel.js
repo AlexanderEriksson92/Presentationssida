@@ -6,7 +6,7 @@ import './App.css';
 
 const ItemType = 'ELEMENT';
 
-const DraggableElement = ({ id, type, content, index, moveElement }) => {
+const DraggableElement = ({ id, type, content, index, moveElement }) => {   
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
     item: { id, index },
@@ -50,7 +50,7 @@ const DraggableElement = ({ id, type, content, index, moveElement }) => {
   );
 };
 
-function CreatePost() {
+function CreatePost() {                         
   const [elements, setElements] = useState([]);
   const [page, setPage] = useState('Exempel'); // Default page
   const [existingPosts, setExistingPosts] = useState([]);
@@ -74,26 +74,24 @@ function CreatePost() {
     fetchPosts();
   }, [page]);
 
-  const moveElement = (fromIndex, toIndex) => {
+  const moveElement = (fromIndex, toIndex) => {                   
     const updatedElements = Array.from(elements);
     const [movedElement] = updatedElements.splice(fromIndex, 1);
     updatedElements.splice(toIndex, 0, movedElement);
-
     setElements(updatedElements);
   };
-
+  // Funktion för att flytta en befintlig post
   const moveExistingElement = (fromIndex, toIndex) => {
     const updatedPosts = Array.from(existingPosts);
     const [movedPost] = updatedPosts.splice(fromIndex, 1);
     updatedPosts.splice(toIndex, 0, movedPost);
-
     setExistingPosts(updatedPosts);
 
     const newPositions = updatedPosts.map((post, index) => ({
       id: post.id,
       position: index,
     }));
-
+    // Uppdatera positioner i databasen
     fetch('http://localhost:3001/update-positions', {
       method: 'POST',
       headers: {
@@ -123,15 +121,12 @@ function CreatePost() {
       setNewElementContent('');
     }
   };
-
+  // Funktion för att skapa en post
   const handleSubmit = async (e) => {
     e.preventDefault();
     const headerElement = elements.find(element => element.type === 'header');
     const title = headerElement ? headerElement.content : '';
     const contentWithoutHeader = elements.filter(element => element.type !== 'header');
-
-    console.log('Submitting post with title:', title);
-    console.log('Content without header:', contentWithoutHeader);
 
     try {
       const response = await fetch('http://localhost:3001/posts', {
@@ -143,13 +138,13 @@ function CreatePost() {
       alert('Post created successfully!');
       setElements([]);
       setPage('Exempel');
-      window.location.reload();  // Ladda om sidan
+      window.location.reload();  // Laddar om sidan
     } catch (error) {
       console.error('Failed to create post:', error);
       alert('Failed to create post.');
     }
   };
-
+  
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container-fluid mt-5">

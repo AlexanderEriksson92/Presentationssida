@@ -17,7 +17,7 @@ function Login() {
         });
         const data = await response.json();
         if (response.ok) {
-            login(data); // Spara token och logga in användaren
+            login(data); // Spara token och loggar in användaren
             alert('Inloggning lyckad!');
             navigate('/');
         } else {

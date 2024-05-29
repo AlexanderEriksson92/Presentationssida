@@ -8,7 +8,7 @@ export function useLogin() {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true); // Lägg till laddningsstatus
+    const [loading, setLoading] = useState(true); // Lägger till laddningsstatus
 
     useEffect(() => {
         const savedUser = localStorage.getItem('user');
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(userData);
             } catch (e) {
                 console.error('Error parsing user data:', e);
-                localStorage.removeItem('user'); // Rensa korrupt data om det misslyckas att parsa
+                localStorage.removeItem('user'); // Rensar korrupt data om det misslyckas att parsa
             }
         }
         setLoading(false); // Autentiseringskontrollen är klar

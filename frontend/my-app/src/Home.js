@@ -6,7 +6,7 @@ import './App.css'; // Importerar CSS-filen
 
 const ItemType = 'CARD';
 
-const DraggableCard = ({ id, content, index, moveCard }) => {
+const DraggableCard = ({ id, content, index, moveCard }) => {   
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
     item: { id, index },
@@ -28,7 +28,7 @@ const DraggableCard = ({ id, content, index, moveCard }) => {
   return (
     <div
       ref={(node) => drag(drop(node))}
-      className={`draggable-box mb-4 ${isDragging ? 'dragging' : ''}`}
+      className={`draggable-box mb-4 ${isDragging ? 'dragging' : ''}`}    // Ändrat från draggable-box till card
       style={{
         backgroundColor: '#F1F2FA',
         borderRadius: '5px',
@@ -72,7 +72,7 @@ function Home() {
     fetchPosts();
   }, []);
 
-  const moveCard = (fromIndex, toIndex) => {
+  const moveCard = (fromIndex, toIndex) => {              // Ändrat från moveElement till moveCard
     const updatedPosts = Array.from(posts);
     const [movedPost] = updatedPosts.splice(fromIndex, 1);
     updatedPosts.splice(toIndex, 0, movedPost);
@@ -84,7 +84,7 @@ function Home() {
 
     setPosts(newPosts);
 
-    fetch('http://localhost:3001/update-positions', {
+    fetch('http://localhost:3001/update-positions', {         // När en post flyttas uppdateras positionen i databasen
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

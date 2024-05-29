@@ -1,3 +1,4 @@
+// Skapar en backend-server med Express.js som hanterar autentisering och CRUD-operationer för inlägg
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,30 +11,23 @@ const SECRET_KEY = 'verysecretkey';
 
 app.use(cors());
 app.use(bodyParser.json());
-
+// Authentiseringsmiddleware
 function authenticate(req, res, next) {
   const authHeader = req.headers['authorization'];
-  console.log('Authorization header:', authHeader); // Logga headern
-
   if (!authHeader) {
     return res.status(401).send({ message: 'API-nyckel krävs' });
   }
-
   const token = authHeader.split(' ')[1]; // Ta bort "Bearer " prefixet
-  console.log('Token:', token); // Logga token
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      console.log('Token verification error:', err); // Logga verifieringsfel
       return res.status(401).send({ message: 'Ogiltig API-nyckel' });
     }
-
-    console.log('Decoded token:', decoded); // Logga dekrypterad token
-    req.user = decoded; // Spara den dekodade användarinformationen i req-objektet
+    req.user = decoded; // Sparar den dekodade användarinformationen i req-objektet
     next();
   });
 }
-
+// Registrerings- och inloggningsendpunkter
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   db.query('SELECT username FROM users WHERE username = ?', [username], async (err, result) => {
@@ -72,7 +66,7 @@ app.post('/login', async (req, res) => {
     });
   });
 });
-
+// Hämtar inlägg från databasen
 app.get('/posts', (req, res) => {
   const page = req.query.page;
   let query = 'SELECT * FROM posts';
@@ -85,24 +79,18 @@ app.get('/posts', (req, res) => {
 
   db.query(query, queryParams, (err, results) => {
     if (err) {
-      console.log('Database query error:', err); // Logga fel
       return res.status(500).send('Error fetching posts');
     }
-    console.log('Fetched posts from database:', results); // Logga resultat
     res.json(results);
   });
 });
-
-// Lägg till authenticate middleware här
+// Skapar ett nytt inlägg och går igenom authoriseringsprocessen
 app.post('/posts', authenticate, async (req, res) => {
-  console.log('POST /posts request received', req.body);
   const { title, content, page } = req.body;
-
   let textContent = '';
   let imageUrl = '';
   let listContent = '';
   let headerContent = '';
-
   content.forEach(element => {
     switch (element.type) {
       case 'text':
@@ -124,7 +112,6 @@ app.post('/posts', authenticate, async (req, res) => {
 
   const query = 'INSERT INTO posts (title, text_content, image_url, list_content, header_content, page, position) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const queryParams = [title, textContent, imageUrl, listContent, headerContent, page, null];
-  console.log('Executing query:', query, 'with params:', queryParams);
 
   db.query(query, queryParams, (err, result) => {
     if (err) {
@@ -135,7 +122,7 @@ app.post('/posts', authenticate, async (req, res) => {
   });
 });
 
-// Lägg till authenticate middleware här
+// Raderar inlägg från databasen
 app.delete('/posts/:id', authenticate, (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM posts WHERE id = ?', [id], (err, result) => {
@@ -149,7 +136,7 @@ app.delete('/posts/:id', authenticate, (req, res) => {
   });
 });
 
-// Lägg till authenticate middleware här
+// Uppdaterar inlägg i databasen
 app.put('/posts/:id', authenticate, (req, res) => {
   const { id } = req.params;
   const { title, text_content, image_url, list_content, header_content } = req.body;
@@ -172,10 +159,9 @@ app.put('/posts/:id', authenticate, (req, res) => {
     res.status(200).json({ message: 'Post updated successfully' });
   });
 });
-
+// Uppdaterar positioner i databasen
 app.post('/update-positions', authenticate, (req, res) => {
   const { positions } = req.body;
-
   const updates = positions.map(({ id, position }) => {
     return new Promise((resolve, reject) => {
       db.query('UPDATE posts SET position = ? WHERE id = ?', [position, id], (err, result) => {
