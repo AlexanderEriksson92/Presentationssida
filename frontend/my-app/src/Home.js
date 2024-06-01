@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'; // Importerar CSS-filen
+import './App.css';
 
 const ItemType = 'CARD';
 
@@ -28,7 +28,7 @@ const DraggableCard = ({ id, content, index, moveCard }) => {
   return (
     <div
       ref={(node) => drag(drop(node))}
-      className={`draggable-box mb-4 ${isDragging ? 'dragging' : ''}`}    // Ändrat från draggable-box till card
+      className={`draggable-box mb-4 ${isDragging ? 'dragging' : ''}`}
       style={{
         backgroundColor: '#F1F2FA',
         borderRadius: '5px',
@@ -72,7 +72,7 @@ function Home() {
     fetchPosts();
   }, []);
 
-  const moveCard = (fromIndex, toIndex) => {              // Ändrat från moveElement till moveCard
+  const moveCard = (fromIndex, toIndex) => {              
     const updatedPosts = Array.from(posts);
     const [movedPost] = updatedPosts.splice(fromIndex, 1);
     updatedPosts.splice(toIndex, 0, movedPost);
@@ -84,10 +84,17 @@ function Home() {
 
     setPosts(newPosts);
 
-    fetch('http://localhost:3001/update-positions', {         // När en post flyttas uppdateras positionen i databasen
+    const apiKey = JSON.parse(localStorage.getItem('user'))?.token?.apikey; // Hämta API-nyckeln från localStorage
+    if (!apiKey) {
+      console.error('API key not found in localStorage');
+      return;
+    }
+
+    fetch('http://localhost:3001/update-positions', {         
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({ positions: newPosts.map(({ id, position }) => ({ id, position })) }),
     })

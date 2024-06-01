@@ -17,8 +17,7 @@ function authenticate(req, res, next) {
   if (!authHeader) {
     return res.status(401).send({ message: 'API-nyckel krävs' });
   }
-  const token = authHeader.split(' ')[1]; // Ta bort "Bearer " prefixet
-
+  const token = authHeader.split(' ')[1]; // Tar bort "Bearer " prefixet
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: 'Ogiltig API-nyckel' });
@@ -116,7 +115,7 @@ app.post('/posts', authenticate, async (req, res) => {
       console.error('Error during post creation:', err);
       return res.status(500).json({ message: 'Failed to create post', error: err });
     }
-    res.status(201).json({ message: 'Post created successfully', postId: result.insertId });
+    res.status(201).json({ message: 'Inlägg skapat!', postId: result.insertId });
   });
 });
 

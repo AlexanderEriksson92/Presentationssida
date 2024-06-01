@@ -60,7 +60,16 @@ function CreatePost() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/posts?page=${page}`);
+        const apiKey = JSON.parse(localStorage.getItem('user'))?.token?.apikey; // Hämtar API-nyckeln från localStorage
+        if (!apiKey) {
+          throw new Error('API key not found in localStorage');
+        }
+
+        const response = await fetch(`http://localhost:3001/posts?page=${page}`, {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+          },
+        });
         if (!response.ok) throw new Error('Failed to fetch posts');
         const data = await response.json();
         // Sortera poster baserat på position
@@ -86,16 +95,22 @@ function CreatePost() {
     const [movedPost] = updatedPosts.splice(fromIndex, 1);
     updatedPosts.splice(toIndex, 0, movedPost);
     setExistingPosts(updatedPosts);
-
     const newPositions = updatedPosts.map((post, index) => ({
       id: post.id,
       position: index,
     }));
+
+    const apiKey = JSON.parse(localStorage.getItem('user'))?.token?.apikey; // Hämtar API-nyckeln från localStorage
+    if (!apiKey) {
+      console.error('API key not found in localStorage');
+      return;
+    }
     // Uppdatera positioner i databasen
     fetch('http://localhost:3001/update-positions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({ positions: newPositions }),
     })
@@ -121,7 +136,7 @@ function CreatePost() {
       setNewElementContent('');
     }
   };
-  // Funktion för att skapa en post
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const headerElement = elements.find(element => element.type === 'header');
@@ -129,9 +144,17 @@ function CreatePost() {
     const contentWithoutHeader = elements.filter(element => element.type !== 'header');
 
     try {
+      const apiKey = JSON.parse(localStorage.getItem('user'))?.token?.apikey; // Hämtar API-nyckeln från localStorage
+      if (!apiKey) {
+        throw new Error('API key not found in localStorage');
+      }
+
       const response = await fetch('http://localhost:3001/posts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`, 
+        },
         body: JSON.stringify({ title, content: contentWithoutHeader, page })
       });
       if (!response.ok) throw new Error('Something went wrong');

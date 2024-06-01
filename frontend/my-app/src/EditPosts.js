@@ -46,9 +46,6 @@ function EditPosts() {
       list_content: newListContent ? JSON.stringify(newListContent.split(',')) : '',
     };
 
-    console.log('Saving post with id:', id); // Loggning för att verifiera sparningsprocessen
-    console.log('Data being sent:', postData); // Logga data som skickas
-
     try {
       const apikey = user?.token?.apikey; // Hämtar endast API-nyckeln
       if (!apikey) {
