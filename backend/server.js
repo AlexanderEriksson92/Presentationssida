@@ -71,12 +71,10 @@ app.get('/posts', (req, res) => {
   const page = req.query.page;
   let query = 'SELECT * FROM posts';
   let queryParams = [];
-
   if (page) {
     query += ' WHERE page = ?';
     queryParams.push(page);
   }
-
   db.query(query, queryParams, (err, results) => {
     if (err) {
       return res.status(500).send('Error fetching posts');
